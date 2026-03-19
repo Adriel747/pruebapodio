@@ -1,0 +1,537 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Registro de Aplicantes</title>
+<link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;1,9..40,300&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #F5F2ED;
+    --surface: #FFFFFF;
+    --primary: #1B3A4B;
+    --accent: #D4A853;
+    --accent2: #4A7C59;
+    --text: #1C1C1C;
+    --muted: #6B6B6B;
+    --border: #DDD8CF;
+    --error: #C0392B;
+    --success: #2E7D32;
+    --radius: 12px;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    font-family: 'DM Sans', sans-serif;
+    background: var(--bg);
+    min-height: 100vh;
+    display: flex;
+    align-items: flex-start;
+    justify-content: center;
+    padding: 40px 16px 80px;
+  }
+
+  body::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.03'/%3E%3C/svg%3E");
+    pointer-events: none;
+    z-index: 0;
+    opacity: 0.4;
+  }
+
+  .wrapper {
+    position: relative;
+    z-index: 1;
+    width: 100%;
+    max-width: 640px;
+  }
+
+  .header {
+    text-align: center;
+    margin-bottom: 40px;
+    animation: fadeDown 0.6s ease both;
+  }
+
+  .header .badge {
+    display: inline-block;
+    background: var(--accent);
+    color: #fff;
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    padding: 5px 14px;
+    border-radius: 100px;
+    margin-bottom: 16px;
+  }
+
+  .header h1 {
+    font-family: 'DM Serif Display', serif;
+    font-size: clamp(2rem, 5vw, 2.8rem);
+    color: var(--primary);
+    line-height: 1.15;
+    margin-bottom: 10px;
+  }
+
+  .header p {
+    color: var(--muted);
+    font-size: 0.95rem;
+    font-weight: 300;
+  }
+
+  .divider {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin: 8px 0 28px;
+  }
+  .divider::before, .divider::after {
+    content: '';
+    flex: 1;
+    height: 1px;
+    background: var(--accent);
+    opacity: 0.35;
+  }
+  .divider span { font-size: 18px; }
+
+  .card {
+    background: var(--surface);
+    border-radius: 20px;
+    padding: 40px 40px;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.04), 0 8px 32px rgba(0,0,0,0.07);
+    border: 1px solid var(--border);
+    animation: fadeUp 0.7s ease both;
+  }
+
+  @media (max-width: 520px) {
+    .card { padding: 28px 20px; }
+  }
+
+  .section-label {
+    font-size: 10px;
+    font-weight: 600;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--accent2);
+    margin-bottom: 20px;
+    padding-bottom: 8px;
+    border-bottom: 1px solid var(--border);
+    margin-top: 32px;
+  }
+  .section-label:first-of-type { margin-top: 0; }
+
+  .field { margin-bottom: 22px; }
+  .field:last-child { margin-bottom: 0; }
+
+  label {
+    display: block;
+    font-size: 0.83rem;
+    font-weight: 500;
+    color: var(--text);
+    margin-bottom: 7px;
+    letter-spacing: 0.01em;
+  }
+  label span.req { color: var(--accent); margin-left: 2px; }
+
+  input[type="text"],
+  input[type="email"],
+  input[type="tel"],
+  input[type="number"],
+  select,
+  textarea {
+    width: 100%;
+    padding: 12px 16px;
+    border: 1.5px solid var(--border);
+    border-radius: var(--radius);
+    font-family: 'DM Sans', sans-serif;
+    font-size: 0.95rem;
+    color: var(--text);
+    background: var(--bg);
+    transition: border-color 0.2s, box-shadow 0.2s, background 0.2s;
+    appearance: none;
+    outline: none;
+  }
+
+  input:focus, select:focus, textarea:focus {
+    border-color: var(--primary);
+    background: #fff;
+    box-shadow: 0 0 0 3px rgba(27,58,75,0.09);
+  }
+
+  select {
+    background-image: url("data:image/svg+xml,%3Csvg width='12' height='8' viewBox='0 0 12 8' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%236B6B6B' stroke-width='1.5' fill='none' stroke-linecap='round'/%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: right 14px center;
+    padding-right: 38px;
+    cursor: pointer;
+  }
+
+  .pill-group {
+    display: flex;
+    gap: 10px;
+    flex-wrap: wrap;
+  }
+  .pill-group input[type="radio"] { display: none; }
+  .pill-group label {
+    margin: 0;
+    padding: 10px 20px;
+    border: 1.5px solid var(--border);
+    border-radius: 100px;
+    cursor: pointer;
+    font-size: 0.88rem;
+    font-weight: 400;
+    color: var(--muted);
+    transition: all 0.18s;
+    background: var(--bg);
+    user-select: none;
+  }
+  .pill-group input[type="radio"]:checked + label {
+    background: var(--primary);
+    border-color: var(--primary);
+    color: #fff;
+    font-weight: 500;
+  }
+  .pill-group label:hover {
+    border-color: var(--primary);
+    color: var(--primary);
+  }
+
+  .level-group {
+    display: flex;
+    gap: 8px;
+    flex-wrap: wrap;
+  }
+  .level-group input[type="radio"] { display: none; }
+  .level-group label {
+    margin: 0;
+    padding: 8px 16px;
+    border: 1.5px solid var(--border);
+    border-radius: 8px;
+    cursor: pointer;
+    font-size: 0.88rem;
+    font-weight: 500;
+    color: var(--muted);
+    transition: all 0.18s;
+    background: var(--bg);
+    user-select: none;
+    min-width: 52px;
+    text-align: center;
+  }
+  .level-group input[type="radio"]:checked + label {
+    background: var(--accent2);
+    border-color: var(--accent2);
+    color: #fff;
+  }
+
+  .row { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+  @media (max-width: 480px) { .row { grid-template-columns: 1fr; } }
+
+  .submit-wrap { margin-top: 36px; text-align: center; }
+
+  button[type="submit"] {
+    background: var(--primary);
+    color: #fff;
+    border: none;
+    border-radius: 100px;
+    padding: 16px 48px;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 0.95rem;
+    font-weight: 600;
+    letter-spacing: 0.03em;
+    cursor: pointer;
+    transition: background 0.2s, transform 0.15s, box-shadow 0.2s;
+    box-shadow: 0 4px 16px rgba(27,58,75,0.25);
+    min-width: 200px;
+  }
+  button[type="submit"]:hover {
+    background: #142d3a;
+    transform: translateY(-1px);
+    box-shadow: 0 6px 24px rgba(27,58,75,0.3);
+  }
+  button[type="submit"]:active { transform: translateY(0); }
+  button[type="submit"]:disabled {
+    background: #9ab0b9;
+    cursor: not-allowed;
+    transform: none;
+    box-shadow: none;
+  }
+
+  .msg {
+    margin-top: 20px;
+    padding: 14px 18px;
+    border-radius: var(--radius);
+    font-size: 0.9rem;
+    font-weight: 500;
+    display: none;
+  }
+  .msg.success {
+    background: #e8f5e9;
+    color: var(--success);
+    border: 1px solid #a5d6a7;
+    display: block;
+  }
+  .msg.error {
+    background: #fdecea;
+    color: var(--error);
+    border: 1px solid #ef9a9a;
+    display: block;
+  }
+
+  .spinner {
+    display: inline-block;
+    width: 16px; height: 16px;
+    border: 2px solid rgba(255,255,255,0.4);
+    border-top-color: #fff;
+    border-radius: 50%;
+    animation: spin 0.7s linear infinite;
+    vertical-align: middle;
+    margin-right: 8px;
+  }
+
+  .footer {
+    text-align: center;
+    margin-top: 28px;
+    font-size: 0.78rem;
+    color: var(--muted);
+    animation: fadeUp 1s ease both;
+  }
+
+  @keyframes fadeDown {
+    from { opacity: 0; transform: translateY(-20px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(18px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+  @keyframes spin {
+    to { transform: rotate(360deg); }
+  }
+</style>
+</head>
+<body>
+
+<div class="wrapper">
+  <div class="header">
+    <div class="badge">Convocatoria 2025</div>
+    <h1>Registro de<br><em>Aplicantes</em></h1>
+    <p>Completa el formulario para inscribirte al programa</p>
+    <div class="divider"><span>✦</span></div>
+  </div>
+
+  <div class="card">
+    <form id="appForm" novalidate>
+
+      <!-- Modalidad -->
+      <p class="section-label">¿A qué modalidad aplicas?</p>
+      <div class="field">
+        <div class="pill-group">
+          <input type="radio" name="modalidad" id="m-foro" value="Foro" required>
+          <label for="m-foro">📢 Foro</label>
+          <input type="radio" name="modalidad" id="m-voluntariado" value="Voluntariado">
+          <label for="m-voluntariado">🤝 Voluntariado</label>
+          <input type="radio" name="modalidad" id="m-pasantia" value="Pasantía">
+          <label for="m-pasantia">🎓 Pasantía</label>
+        </div>
+      </div>
+
+      <!-- Datos personales -->
+      <p class="section-label">Datos Personales</p>
+
+      <div class="field">
+        <label for="nombre">Nombre completo <span class="req">*</span></label>
+        <input type="text" id="nombre" name="nombre" placeholder="Ej: Ana María García López" required>
+      </div>
+
+      <div class="row">
+        <div class="field">
+          <label for="edad">Edad <span class="req">*</span></label>
+          <input type="number" id="edad" name="edad" placeholder="Ej: 22" min="16" max="45" required>
+        </div>
+        <div class="field">
+          <label for="celular">Celular <span class="req">*</span></label>
+          <input type="tel" id="celular" name="celular" placeholder="Ej: 70012345" required>
+        </div>
+      </div>
+
+      <div class="field">
+        <label for="correo">Correo electrónico <span class="req">*</span></label>
+        <input type="email" id="correo" name="correo" placeholder="nombre@correo.com" required>
+      </div>
+
+      <!-- Datos académicos -->
+      <p class="section-label">Datos Académicos</p>
+
+      <div class="field">
+        <label for="universidad">Universidad <span class="req">*</span></label>
+        <select id="universidad" name="universidad" required>
+          <option value="">— Selecciona tu universidad —</option>
+          <optgroup label="Universidad Pública">
+            <option>UMSA – Univ. Mayor de San Andrés</option>
+            <option>UPEA – Univ. Pública de El Alto</option>
+            <option>UMSS – Univ. Mayor de San Simón</option>
+            <option>UATF – Univ. Autónoma Tomás Frías</option>
+            <option>UAGRM – Univ. Autónoma Gabriel René Moreno</option>
+            <option>UTO – Univ. Técnica de Oruro</option>
+            <option>UAB – Univ. Amazónica de Beni</option>
+          </optgroup>
+          <optgroup label="Universidad Privada">
+            <option>UCB – Univ. Católica Boliviana</option>
+            <option>EMI – Escuela Militar de Ingeniería</option>
+            <option>Univ. Nur</option>
+            <option>Univ. Franz Tamayo (UNIFRANZ)</option>
+            <option>Univ. Privada de Bolivia (UPB)</option>
+            <option>Univ. Loyola</option>
+            <option>Univ. Salesiana de Bolivia</option>
+            <option>Univ. Andina Simón Bolívar</option>
+            <option>Univ. del Valle (UNIVALLE)</option>
+            <option>Univ. Tecnológica Boliviana (UTB)</option>
+          </optgroup>
+          <option value="otra">Otra universidad</option>
+        </select>
+      </div>
+
+      <div id="otraUnivWrap" class="field" style="display:none">
+        <label for="otraUniv">Especifica tu universidad</label>
+        <input type="text" id="otraUniv" name="otraUniversidad" placeholder="Nombre de tu universidad">
+      </div>
+
+      <div class="row">
+        <div class="field">
+          <label for="semestre">Semestre <span class="req">*</span></label>
+          <select id="semestre" name="semestre" required>
+            <option value="">— Semestre —</option>
+            <option>1er semestre</option>
+            <option>2do semestre</option>
+            <option>3er semestre</option>
+            <option>4to semestre</option>
+            <option>5to semestre</option>
+            <option>6to semestre</option>
+            <option>7mo semestre</option>
+            <option>8vo semestre</option>
+            <option>9no semestre</option>
+            <option>10mo semestre</option>
+            <option>Egresado / Titulado</option>
+          </select>
+        </div>
+        <div class="field">
+          <label for="carrera">Carrera <span class="req">*</span></label>
+          <input type="text" id="carrera" name="carrera" placeholder="Ej: Ingeniería Comercial" required>
+        </div>
+      </div>
+
+      <!-- Inglés -->
+      <p class="section-label">Nivel de Inglés</p>
+      <div class="field">
+        <div class="level-group">
+          <input type="radio" name="ingles" id="a1" value="A1">
+          <label for="a1">A1</label>
+          <input type="radio" name="ingles" id="a2" value="A2">
+          <label for="a2">A2</label>
+          <input type="radio" name="ingles" id="b1" value="B1">
+          <label for="b1">B1</label>
+          <input type="radio" name="ingles" id="b2" value="B2">
+          <label for="b2">B2</label>
+          <input type="radio" name="ingles" id="c1" value="C1">
+          <label for="c1">C1</label>
+          <input type="radio" name="ingles" id="c2" value="C2">
+          <label for="c2">C2</label>
+          <input type="radio" name="ingles" id="sin" value="Sin nivel">
+          <label for="sin">Sin nivel</label>
+        </div>
+      </div>
+
+      <!-- Submit -->
+      <div class="submit-wrap">
+        <button type="submit" id="submitBtn">Enviar registro</button>
+        <div id="msg" class="msg"></div>
+      </div>
+    </form>
+  </div>
+
+  <div class="footer">
+    Tus datos están protegidos y serán usados únicamente para el proceso de selección.
+  </div>
+</div>
+
+<script>
+  const APPS_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbwU516zWS_8XeGpX6jFoEQ_wtwMszPd8oZqd2DfdhigIvfzSkfWccfEhbimJn-AzSogzg/exec';
+
+  const form = document.getElementById('appForm');
+  const submitBtn = document.getElementById('submitBtn');
+  const msg = document.getElementById('msg');
+  const univSelect = document.getElementById('universidad');
+  const otraWrap = document.getElementById('otraUnivWrap');
+
+  univSelect.addEventListener('change', () => {
+    otraWrap.style.display = univSelect.value === 'otra' ? 'block' : 'none';
+  });
+
+  function showMsg(text, type) {
+    msg.textContent = text;
+    msg.className = 'msg ' + type;
+  }
+
+  function validateForm() {
+    const modalidad = form.querySelector('input[name="modalidad"]:checked');
+    if (!modalidad) { showMsg('Por favor selecciona una modalidad.', 'error'); return false; }
+    if (!form.nombre.value.trim()) { showMsg('Por favor ingresa tu nombre completo.', 'error'); return false; }
+    if (!form.edad.value) { showMsg('Por favor ingresa tu edad.', 'error'); return false; }
+    if (!form.celular.value.trim()) { showMsg('Por favor ingresa tu número de celular.', 'error'); return false; }
+    const emailRe = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!emailRe.test(form.correo.value)) { showMsg('Por favor ingresa un correo válido.', 'error'); return false; }
+    if (!form.universidad.value) { showMsg('Por favor selecciona tu universidad.', 'error'); return false; }
+    if (!form.semestre.value) { showMsg('Por favor selecciona tu semestre.', 'error'); return false; }
+    if (!form.carrera.value.trim()) { showMsg('Por favor ingresa tu carrera.', 'error'); return false; }
+    return true;
+  }
+
+  form.addEventListener('submit', async (e) => {
+    e.preventDefault();
+    msg.className = 'msg';
+
+    if (!validateForm()) return;
+
+    submitBtn.disabled = true;
+    submitBtn.innerHTML = '<span class="spinner"></span> Enviando...';
+
+    const univVal = form.universidad.value === 'otra'
+      ? (form.otraUniversidad.value.trim() || 'Otra')
+      : form.universidad.value;
+
+    const data = {
+      fecha: new Date().toLocaleString('es-BO', { timeZone: 'America/La_Paz' }),
+      modalidad: form.querySelector('input[name="modalidad"]:checked')?.value || '',
+      nombre: form.nombre.value.trim(),
+      edad: form.edad.value,
+      celular: form.celular.value.trim(),
+      correo: form.correo.value.trim(),
+      universidad: univVal,
+      semestre: form.semestre.value,
+      carrera: form.carrera.value.trim(),
+      ingles: form.querySelector('input[name="ingles"]:checked')?.value || 'No especificado'
+    };
+
+    try {
+      await fetch(APPS_SCRIPT_URL, {
+        method: 'POST',
+        mode: 'no-cors',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(data)
+      });
+      showMsg('✅ ¡Registro enviado con éxito! Nos pondremos en contacto pronto.', 'success');
+      form.reset();
+      otraWrap.style.display = 'none';
+    } catch (err) {
+      showMsg('❌ Error al enviar. Verifica tu conexión e intenta nuevamente.', 'error');
+    } finally {
+      submitBtn.disabled = false;
+      submitBtn.innerHTML = 'Enviar registro';
+    }
+  });
+</script>
+</body>
+</html>
