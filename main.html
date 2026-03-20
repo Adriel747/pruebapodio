@@ -2,339 +2,655 @@
 <html lang="es">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Registro de Aplicantes</title>
-<link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;1,9..40,300&display=swap" rel="stylesheet">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+<title>Postulaciones · AIESEC Bolivia</title>
+<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700;800;900&family=Open+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
 <style>
-  :root {
-    --bg: #F5F2ED;
-    --surface: #FFFFFF;
-    --primary: #1B3A4B;
-    --accent: #D4A853;
-    --accent2: #4A7C59;
-    --text: #1C1C1C;
-    --muted: #6B6B6B;
-    --border: #DDD8CF;
-    --error: #C0392B;
-    --success: #2E7D32;
-    --radius: 12px;
-  }
+/* ─────────────────────────────────────────
+   THEME VARIABLES — cambian con la selección
+───────────────────────────────────────── */
+:root {
+  --theme-bg:        #F0F2F5;
+  --theme-hero:      #00205B;
+  --theme-accent:    #037EF3;
+  --theme-pill-bg:   #E8EBF5;
+  --theme-pill-text: #00205B;
+  --theme-btn:       #00205B;
+  --theme-btn-shadow:rgba(0,32,91,0.30);
+  --theme-bar:       #037EF3;
+  --theme-section:   #00205B;
+  --theme-focus:     rgba(0,32,91,0.10);
+  --theme-tag-bg:    rgba(3,126,243,0.12);
+  --theme-tag-text:  #037EF3;
+}
 
-  * { margin: 0; padding: 0; box-sizing: border-box; }
+/* FORO — verde */
+body.sel-foro {
+  --theme-bg:        #EAF7F4;
+  --theme-hero:      #005C4B;
+  --theme-accent:    #00A887;
+  --theme-pill-bg:   #D4F0EB;
+  --theme-pill-text: #005C4B;
+  --theme-btn:       #00A887;
+  --theme-btn-shadow:rgba(0,168,135,0.32);
+  --theme-bar:       #00A887;
+  --theme-section:   #005C4B;
+  --theme-focus:     rgba(0,168,135,0.12);
+  --theme-tag-bg:    rgba(0,168,135,0.13);
+  --theme-tag-text:  #00875E;
+}
 
-  body {
-    font-family: 'DM Sans', sans-serif;
-    background: var(--bg);
-    min-height: 100vh;
-    display: flex;
-    align-items: flex-start;
-    justify-content: center;
-    padding: 40px 16px 80px;
-  }
+/* VOLUNTARIADO — naranja */
+body.sel-vol {
+  --theme-bg:        #FFF3EA;
+  --theme-hero:      #7A3100;
+  --theme-accent:    #FF6B00;
+  --theme-pill-bg:   #FFDEC4;
+  --theme-pill-text: #7A3100;
+  --theme-btn:       #FF6B00;
+  --theme-btn-shadow:rgba(255,107,0,0.32);
+  --theme-bar:       #FF6B00;
+  --theme-section:   #7A3100;
+  --theme-focus:     rgba(255,107,0,0.12);
+  --theme-tag-bg:    rgba(255,107,0,0.13);
+  --theme-tag-text:  #CC5500;
+}
 
-  body::before {
-    content: '';
-    position: fixed;
-    inset: 0;
-    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.03'/%3E%3C/svg%3E");
-    pointer-events: none;
-    z-index: 0;
-    opacity: 0.4;
-  }
+/* PASANTÍA — azul */
+body.sel-pas {
+  --theme-bg:        #EAF2FE;
+  --theme-hero:      #003A82;
+  --theme-accent:    #037EF3;
+  --theme-pill-bg:   #C8E1FB;
+  --theme-pill-text: #003A82;
+  --theme-btn:       #037EF3;
+  --theme-btn-shadow:rgba(3,126,243,0.32);
+  --theme-bar:       #037EF3;
+  --theme-section:   #003A82;
+  --theme-focus:     rgba(3,126,243,0.12);
+  --theme-tag-bg:    rgba(3,126,243,0.13);
+  --theme-tag-text:  #0260C4;
+}
 
-  .wrapper {
-    position: relative;
-    z-index: 1;
-    width: 100%;
-    max-width: 640px;
-  }
+/* ─────────────────────────────────────────
+   RESET & BASE
+───────────────────────────────────────── */
+*, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
 
-  .header {
-    text-align: center;
-    margin-bottom: 40px;
-    animation: fadeDown 0.6s ease both;
-  }
+html { scroll-behavior: smooth; }
 
-  .header .badge {
-    display: inline-block;
-    background: var(--accent);
-    color: #fff;
-    font-size: 11px;
-    font-weight: 600;
-    letter-spacing: 0.12em;
-    text-transform: uppercase;
-    padding: 5px 14px;
-    border-radius: 100px;
-    margin-bottom: 16px;
-  }
+body {
+  font-family: 'Open Sans', sans-serif;
+  background: var(--theme-bg);
+  min-height: 100vh;
+  transition: background 0.45s ease;
+  -webkit-text-size-adjust: 100%;
+}
 
-  .header h1 {
-    font-family: 'DM Serif Display', serif;
-    font-size: clamp(2rem, 5vw, 2.8rem);
-    color: var(--primary);
-    line-height: 1.15;
-    margin-bottom: 10px;
-  }
+/* ─────────────────────────────────────────
+   HERO / HEADER
+───────────────────────────────────────── */
+.hero {
+  background: var(--theme-hero);
+  padding: 0;
+  position: relative;
+  overflow: hidden;
+  transition: background 0.45s ease;
+}
 
-  .header p {
-    color: var(--muted);
-    font-size: 0.95rem;
-    font-weight: 300;
-  }
+/* Formas geométricas AIESEC */
+.hero-shapes {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  overflow: hidden;
+}
+.shape {
+  position: absolute;
+  opacity: 0.07;
+}
+.shape-1 {
+  width: 260px; height: 260px;
+  background: white;
+  top: -80px; right: -60px;
+  transform: rotate(30deg);
+  border-radius: 24px;
+}
+.shape-2 {
+  width: 160px; height: 160px;
+  background: var(--theme-accent);
+  bottom: -60px; left: -30px;
+  transform: rotate(15deg);
+  border-radius: 16px;
+  opacity: 0.18;
+  transition: background 0.45s;
+}
+.shape-3 {
+  width: 0; height: 0;
+  border-left: 55px solid transparent;
+  border-right: 55px solid transparent;
+  border-bottom: 95px solid white;
+  top: 30px; right: 110px;
+  opacity: 0.06;
+}
 
-  .divider {
-    display: flex;
-    align-items: center;
-    gap: 12px;
-    margin: 8px 0 28px;
-  }
-  .divider::before, .divider::after {
-    content: '';
-    flex: 1;
-    height: 1px;
-    background: var(--accent);
-    opacity: 0.35;
-  }
-  .divider span { font-size: 18px; }
+/* Top accent line */
+.hero-topbar {
+  height: 5px;
+  background: var(--theme-accent);
+  transition: background 0.45s ease;
+}
 
-  .card {
-    background: var(--surface);
-    border-radius: 20px;
-    padding: 40px 40px;
-    box-shadow: 0 1px 3px rgba(0,0,0,0.04), 0 8px 32px rgba(0,0,0,0.07);
-    border: 1px solid var(--border);
-    animation: fadeUp 0.7s ease both;
-  }
+.hero-content {
+  position: relative;
+  z-index: 1;
+  padding: 28px 24px 32px;
+}
 
-  @media (max-width: 520px) {
-    .card { padding: 28px 20px; }
-  }
+/* AIESEC branding strip */
+.aiesec-brand {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  margin-bottom: 28px;
+  padding-bottom: 20px;
+  border-bottom: 1px solid rgba(255,255,255,0.12);
+}
 
-  .section-label {
-    font-size: 10px;
-    font-weight: 600;
-    letter-spacing: 0.14em;
-    text-transform: uppercase;
-    color: var(--accent2);
-    margin-bottom: 20px;
-    padding-bottom: 8px;
-    border-bottom: 1px solid var(--border);
-    margin-top: 32px;
-  }
-  .section-label:first-of-type { margin-top: 0; }
+.brand-logo {
+  display: flex;
+  align-items: center;
+  gap: 0;
+  flex-shrink: 0;
+}
 
-  .field { margin-bottom: 22px; }
-  .field:last-child { margin-bottom: 0; }
+/* Logo triángulo AIESEC */
+.brand-triangle {
+  width: 38px;
+  height: 38px;
+  flex-shrink: 0;
+}
 
-  label {
-    display: block;
-    font-size: 0.83rem;
-    font-weight: 500;
-    color: var(--text);
-    margin-bottom: 7px;
-    letter-spacing: 0.01em;
-  }
-  label span.req { color: var(--accent); margin-left: 2px; }
+.brand-name {
+  font-family: 'Montserrat', sans-serif;
+  font-weight: 900;
+  font-size: 1.35rem;
+  color: #fff;
+  letter-spacing: 0.10em;
+  line-height: 1;
+  margin-left: 9px;
+}
 
-  input[type="text"],
-  input[type="email"],
-  input[type="tel"],
-  input[type="number"],
-  select,
-  textarea {
-    width: 100%;
-    padding: 12px 16px;
-    border: 1.5px solid var(--border);
-    border-radius: var(--radius);
-    font-family: 'DM Sans', sans-serif;
-    font-size: 0.95rem;
-    color: var(--text);
-    background: var(--bg);
-    transition: border-color 0.2s, box-shadow 0.2s, background 0.2s;
-    appearance: none;
-    outline: none;
-  }
+.brand-divider {
+  width: 1px;
+  height: 30px;
+  background: rgba(255,255,255,0.25);
+  flex-shrink: 0;
+}
 
-  input:focus, select:focus, textarea:focus {
-    border-color: var(--primary);
-    background: #fff;
-    box-shadow: 0 0 0 3px rgba(27,58,75,0.09);
-  }
+.brand-right {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+.brand-country {
+  font-family: 'Montserrat', sans-serif;
+  font-weight: 600;
+  font-size: 0.78rem;
+  color: rgba(255,255,255,0.90);
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+.brand-tagline {
+  font-family: 'Open Sans', sans-serif;
+  font-size: 0.68rem;
+  color: rgba(255,255,255,0.50);
+  font-style: italic;
+  font-weight: 300;
+}
 
-  select {
-    background-image: url("data:image/svg+xml,%3Csvg width='12' height='8' viewBox='0 0 12 8' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%236B6B6B' stroke-width='1.5' fill='none' stroke-linecap='round'/%3E%3C/svg%3E");
-    background-repeat: no-repeat;
-    background-position: right 14px center;
-    padding-right: 38px;
-    cursor: pointer;
-  }
+/* Hero title area */
+.hero-tag {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  background: var(--theme-tag-bg);
+  color: var(--theme-accent);
+  font-family: 'Montserrat', sans-serif;
+  font-size: 0.68rem;
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  padding: 5px 12px;
+  border-radius: 100px;
+  margin-bottom: 14px;
+  transition: background 0.45s, color 0.45s;
+}
+.hero-tag::before {
+  content: '';
+  width: 6px; height: 6px;
+  background: var(--theme-accent);
+  border-radius: 50%;
+  transition: background 0.45s;
+}
 
-  .pill-group {
-    display: flex;
-    gap: 10px;
-    flex-wrap: wrap;
-  }
-  .pill-group input[type="radio"] { display: none; }
-  .pill-group label {
-    margin: 0;
-    padding: 10px 20px;
-    border: 1.5px solid var(--border);
-    border-radius: 100px;
-    cursor: pointer;
-    font-size: 0.88rem;
-    font-weight: 400;
-    color: var(--muted);
-    transition: all 0.18s;
-    background: var(--bg);
-    user-select: none;
-  }
-  .pill-group input[type="radio"]:checked + label {
-    background: var(--primary);
-    border-color: var(--primary);
-    color: #fff;
-    font-weight: 500;
-  }
-  .pill-group label:hover {
-    border-color: var(--primary);
-    color: var(--primary);
-  }
+.hero h1 {
+  font-family: 'Montserrat', sans-serif;
+  font-weight: 800;
+  font-size: clamp(1.5rem, 5vw, 2.1rem);
+  color: #fff;
+  line-height: 1.18;
+  margin-bottom: 10px;
+}
+.hero h1 em {
+  color: var(--theme-accent);
+  font-style: normal;
+  transition: color 0.45s;
+}
 
-  .level-group {
-    display: flex;
-    gap: 8px;
-    flex-wrap: wrap;
-  }
-  .level-group input[type="radio"] { display: none; }
-  .level-group label {
-    margin: 0;
-    padding: 8px 16px;
-    border: 1.5px solid var(--border);
-    border-radius: 8px;
-    cursor: pointer;
-    font-size: 0.88rem;
-    font-weight: 500;
-    color: var(--muted);
-    transition: all 0.18s;
-    background: var(--bg);
-    user-select: none;
-    min-width: 52px;
-    text-align: center;
-  }
-  .level-group input[type="radio"]:checked + label {
-    background: var(--accent2);
-    border-color: var(--accent2);
-    color: #fff;
-  }
+.hero-desc {
+  font-size: 0.85rem;
+  color: rgba(255,255,255,0.60);
+  line-height: 1.6;
+  font-weight: 300;
+  max-width: 400px;
+}
 
-  .row { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
-  @media (max-width: 480px) { .row { grid-template-columns: 1fr; } }
+/* Stats strip */
+.hero-stats {
+  display: flex;
+  gap: 0;
+  margin-top: 26px;
+  border-top: 1px solid rgba(255,255,255,0.10);
+  padding-top: 20px;
+}
+.stat {
+  flex: 1;
+  text-align: center;
+  padding: 0 8px;
+}
+.stat + .stat {
+  border-left: 1px solid rgba(255,255,255,0.10);
+}
+.stat-num {
+  font-family: 'Montserrat', sans-serif;
+  font-weight: 800;
+  font-size: 1.3rem;
+  color: var(--theme-accent);
+  line-height: 1;
+  margin-bottom: 4px;
+  transition: color 0.45s;
+}
+.stat-label {
+  font-size: 0.65rem;
+  color: rgba(255,255,255,0.45);
+  font-weight: 400;
+  letter-spacing: 0.04em;
+  line-height: 1.3;
+}
 
-  .submit-wrap { margin-top: 36px; text-align: center; }
+/* ─────────────────────────────────────────
+   FORM CARD
+───────────────────────────────────────── */
+.card {
+  background: rgba(255,255,255,0.88);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  margin: 16px 14px 0;
+  border-radius: 18px;
+  padding: 28px 22px 32px;
+  box-shadow: 0 4px 30px rgba(0,20,60,0.10);
+  border: 1px solid rgba(255,255,255,0.7);
+  transition: box-shadow 0.45s;
+}
 
-  button[type="submit"] {
-    background: var(--primary);
-    color: #fff;
-    border: none;
-    border-radius: 100px;
-    padding: 16px 48px;
-    font-family: 'DM Sans', sans-serif;
-    font-size: 0.95rem;
-    font-weight: 600;
-    letter-spacing: 0.03em;
-    cursor: pointer;
-    transition: background 0.2s, transform 0.15s, box-shadow 0.2s;
-    box-shadow: 0 4px 16px rgba(27,58,75,0.25);
-    min-width: 200px;
-  }
-  button[type="submit"]:hover {
-    background: #142d3a;
-    transform: translateY(-1px);
-    box-shadow: 0 6px 24px rgba(27,58,75,0.3);
-  }
-  button[type="submit"]:active { transform: translateY(0); }
-  button[type="submit"]:disabled {
-    background: #9ab0b9;
-    cursor: not-allowed;
-    transform: none;
-    box-shadow: none;
-  }
+@media (min-width: 480px) {
+  .card { margin: 20px 20px 0; padding: 32px 28px 36px; }
+}
+@media (min-width: 640px) {
+  body { display: flex; justify-content: center; }
+  .hero, .card, .footer { max-width: 620px; width: 100%; }
+  body > * { width: 100%; max-width: 620px; }
+  .page-wrap { width: 100%; max-width: 620px; margin: 0 auto; }
+}
 
-  .msg {
-    margin-top: 20px;
-    padding: 14px 18px;
-    border-radius: var(--radius);
-    font-size: 0.9rem;
-    font-weight: 500;
-    display: none;
-  }
-  .msg.success {
-    background: #e8f5e9;
-    color: var(--success);
-    border: 1px solid #a5d6a7;
-    display: block;
-  }
-  .msg.error {
-    background: #fdecea;
-    color: var(--error);
-    border: 1px solid #ef9a9a;
-    display: block;
-  }
+/* ─────────────────────────────────────────
+   SECTION LABELS
+───────────────────────────────────────── */
+.section-label {
+  font-family: 'Montserrat', sans-serif;
+  font-size: 9.5px;
+  font-weight: 700;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--theme-section);
+  margin-bottom: 16px;
+  padding-bottom: 7px;
+  border-bottom: 2px solid var(--theme-accent);
+  margin-top: 26px;
+  transition: color 0.45s, border-color 0.45s;
+}
+.section-label:first-of-type { margin-top: 0; }
 
-  .spinner {
-    display: inline-block;
-    width: 16px; height: 16px;
-    border: 2px solid rgba(255,255,255,0.4);
-    border-top-color: #fff;
-    border-radius: 50%;
-    animation: spin 0.7s linear infinite;
-    vertical-align: middle;
-    margin-right: 8px;
-  }
+/* ─────────────────────────────────────────
+   FIELDS
+───────────────────────────────────────── */
+.field { margin-bottom: 18px; }
+.field:last-child { margin-bottom: 0; }
 
-  .footer {
-    text-align: center;
-    margin-top: 28px;
-    font-size: 0.78rem;
-    color: var(--muted);
-    animation: fadeUp 1s ease both;
-  }
+label {
+  display: block;
+  font-family: 'Montserrat', sans-serif;
+  font-size: 0.75rem;
+  font-weight: 600;
+  color: #2A2E3D;
+  margin-bottom: 6px;
+  letter-spacing: 0.02em;
+}
+label span.req { color: #E53935; margin-left: 2px; }
 
-  @keyframes fadeDown {
-    from { opacity: 0; transform: translateY(-20px); }
-    to   { opacity: 1; transform: translateY(0); }
-  }
-  @keyframes fadeUp {
-    from { opacity: 0; transform: translateY(18px); }
-    to   { opacity: 1; transform: translateY(0); }
-  }
-  @keyframes spin {
-    to { transform: rotate(360deg); }
-  }
+input[type="text"],
+input[type="email"],
+input[type="tel"],
+input[type="number"],
+select {
+  width: 100%;
+  padding: 12px 14px;
+  border: 1.5px solid #DDE1EC;
+  border-radius: 10px;
+  font-family: 'Open Sans', sans-serif;
+  font-size: 0.92rem;
+  color: #1A1A2E;
+  background: #FAFBFD;
+  transition: border-color 0.2s, box-shadow 0.2s, background 0.2s;
+  appearance: none;
+  outline: none;
+  -webkit-appearance: none;
+  /* Larger touch target on mobile */
+  min-height: 46px;
+}
+input:focus, select:focus {
+  border-color: var(--theme-accent);
+  background: #fff;
+  box-shadow: 0 0 0 3px var(--theme-focus);
+}
+select {
+  background-image: url("data:image/svg+xml,%3Csvg width='12' height='8' viewBox='0 0 12 8' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%236E7891' stroke-width='1.8' fill='none' stroke-linecap='round'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 14px center;
+  background-color: #FAFBFD;
+  padding-right: 38px;
+  cursor: pointer;
+}
+
+/* ─────────────────────────────────────────
+   MODALIDAD PILLS
+───────────────────────────────────────── */
+.pill-group {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+@media (min-width: 400px) {
+  .pill-group { flex-direction: row; flex-wrap: wrap; }
+}
+
+.pill-group input[type="radio"] { display: none; }
+.pill-group label {
+  margin: 0;
+  padding: 13px 20px;
+  border: 2px solid #DDE1EC;
+  border-radius: 12px;
+  cursor: pointer;
+  font-size: 0.88rem;
+  font-weight: 600;
+  color: #6E7891;
+  transition: all 0.25s ease;
+  background: #FAFBFD;
+  user-select: none;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex: 1;
+  min-width: 120px;
+  justify-content: center;
+  /* Good tap target */
+  min-height: 50px;
+}
+.pill-group label:active { transform: scale(0.98); }
+.pill-group label:hover {
+  border-color: var(--theme-accent);
+  color: var(--theme-section);
+  background: #fff;
+}
+
+/* Selected states */
+#m-foro:checked + label {
+  background: #D4F0EB;
+  border-color: #00A887;
+  color: #005C4B;
+  box-shadow: 0 3px 14px rgba(0,168,135,0.20);
+}
+#m-voluntariado:checked + label {
+  background: #FFDEC4;
+  border-color: #FF6B00;
+  color: #7A3100;
+  box-shadow: 0 3px 14px rgba(255,107,0,0.20);
+}
+#m-pasantia:checked + label {
+  background: #C8E1FB;
+  border-color: #037EF3;
+  color: #003A82;
+  box-shadow: 0 3px 14px rgba(3,126,243,0.20);
+}
+
+/* ─────────────────────────────────────────
+   ENGLISH LEVELS
+───────────────────────────────────────── */
+.level-group {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+.level-group input[type="radio"] { display: none; }
+.level-group label {
+  margin: 0;
+  padding: 10px 12px;
+  border: 1.5px solid #DDE1EC;
+  border-radius: 9px;
+  cursor: pointer;
+  font-family: 'Montserrat', sans-serif;
+  font-size: 0.82rem;
+  font-weight: 700;
+  color: #6E7891;
+  transition: all 0.2s;
+  background: #FAFBFD;
+  user-select: none;
+  min-width: 52px;
+  text-align: center;
+  min-height: 44px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.level-group input[type="radio"]:checked + label {
+  background: var(--theme-btn);
+  border-color: var(--theme-btn);
+  color: #fff;
+  box-shadow: 0 2px 10px var(--theme-btn-shadow);
+  transition: background 0.45s, border-color 0.45s, box-shadow 0.45s;
+}
+
+/* ─────────────────────────────────────────
+   ROW LAYOUT
+───────────────────────────────────────── */
+.row { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+@media (max-width: 400px) { .row { grid-template-columns: 1fr; } }
+
+/* ─────────────────────────────────────────
+   SUBMIT BUTTON
+───────────────────────────────────────── */
+.submit-wrap { margin-top: 28px; }
+
+button[type="submit"] {
+  width: 100%;
+  background: var(--theme-btn);
+  color: #fff;
+  border: none;
+  border-radius: 12px;
+  padding: 16px 24px;
+  font-family: 'Montserrat', sans-serif;
+  font-size: 0.9rem;
+  font-weight: 700;
+  letter-spacing: 0.07em;
+  text-transform: uppercase;
+  cursor: pointer;
+  transition: background 0.45s, box-shadow 0.45s, transform 0.15s, filter 0.2s;
+  box-shadow: 0 5px 20px var(--theme-btn-shadow);
+  min-height: 52px;
+}
+button[type="submit"]:hover  { filter: brightness(1.08); transform: translateY(-1px); }
+button[type="submit"]:active { transform: translateY(0); filter: brightness(0.97); }
+button[type="submit"]:disabled {
+  background: #B0BBCC !important;
+  cursor: not-allowed;
+  transform: none;
+  box-shadow: none !important;
+  filter: none;
+}
+
+/* ─────────────────────────────────────────
+   MESSAGES
+───────────────────────────────────────── */
+.msg {
+  margin-top: 14px;
+  padding: 13px 16px;
+  border-radius: 10px;
+  font-size: 0.87rem;
+  font-weight: 500;
+  display: none;
+  line-height: 1.5;
+}
+.msg.success { background: #E6F7F4; color: #005C4B; border: 1px solid #00A887; display: block; }
+.msg.error   { background: #FEECEC; color: #C0392B; border: 1px solid #FFAAAA; display: block; }
+
+/* ─────────────────────────────────────────
+   SPINNER
+───────────────────────────────────────── */
+.spinner {
+  display: inline-block;
+  width: 16px; height: 16px;
+  border: 2.5px solid rgba(255,255,255,0.35);
+  border-top-color: #fff;
+  border-radius: 50%;
+  animation: spin 0.75s linear infinite;
+  vertical-align: middle;
+  margin-right: 8px;
+}
+
+/* ─────────────────────────────────────────
+   FOOTER
+───────────────────────────────────────── */
+.footer {
+  text-align: center;
+  padding: 22px 24px 40px;
+  font-size: 0.72rem;
+  color: #8A93A8;
+  line-height: 1.6;
+}
+.footer a { color: var(--theme-accent); text-decoration: none; transition: color 0.45s; }
+
+/* ─────────────────────────────────────────
+   ANIMATIONS
+───────────────────────────────────────── */
+@keyframes spin { to { transform: rotate(360deg); } }
+
+@keyframes fadeUp {
+  from { opacity: 0; transform: translateY(16px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+.card { animation: fadeUp 0.55s ease both; }
 </style>
 </head>
 <body>
+<div class="page-wrap">
 
-<div class="wrapper">
-  <div class="header">
-    <div class="badge">Convocatoria 2025</div>
-    <h1>Registro de<br><em>Aplicantes</em></h1>
-    <p>Completa el formulario para inscribirte al programa</p>
-    <div class="divider"><span>✦</span></div>
+  <!-- ── HERO ── -->
+  <div class="hero">
+    <div class="hero-topbar"></div>
+    <div class="hero-shapes">
+      <div class="shape shape-1"></div>
+      <div class="shape shape-2"></div>
+      <div class="shape shape-3"></div>
+    </div>
+    <div class="hero-content">
+
+      <!-- Branding AIESEC -->
+      <div class="aiesec-brand">
+        <div class="brand-logo">
+          <svg class="brand-triangle" viewBox="0 0 42 42" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <polygon points="21,3 39,36 3,36" fill="white" opacity="0.95"/>
+            <polygon points="21,12 33,34 9,34" fill="#037EF3" opacity="0.7"/>
+            <polygon points="21,19 29,33 13,33" fill="#00205B" opacity="0.5"/>
+          </svg>
+          <span class="brand-name">AIESEC</span>
+        </div>
+        <div class="brand-divider"></div>
+        <div class="brand-right">
+          <span class="brand-country">Bolivia · Cochabamba</span>
+          <span class="brand-tagline">Empowering young people</span>
+        </div>
+      </div>
+
+      <!-- Tag -->
+      <div class="hero-tag">Convocatoria 2025</div>
+
+      <!-- Título -->
+      <h1>Sé parte del<br>cambio <em>global</em></h1>
+      <p class="hero-desc">Aplica a nuestros programas internacionales y desarrolla tu liderazgo junto a jóvenes de todo el mundo.</p>
+
+      <!-- Stats -->
+      <div class="hero-stats">
+        <div class="stat">
+          <div class="stat-num">120+</div>
+          <div class="stat-label">Países presentes</div>
+        </div>
+        <div class="stat">
+          <div class="stat-num">70k</div>
+          <div class="stat-label">Experiencias al año</div>
+        </div>
+        <div class="stat">
+          <div class="stat-num">3</div>
+          <div class="stat-label">Programas activos</div>
+        </div>
+      </div>
+
+    </div>
   </div>
 
+  <!-- ── FORM CARD ── -->
   <div class="card">
     <form id="appForm" novalidate>
 
       <!-- Modalidad -->
-      <p class="section-label">¿A qué modalidad aplicas?</p>
+      <p class="section-label">¿A qué programa aplicas?</p>
       <div class="field">
         <div class="pill-group">
           <input type="radio" name="modalidad" id="m-foro" value="Foro" required>
-          <label for="m-foro">📢 Foro</label>
+          <label for="m-foro">
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+            Foro
+          </label>
           <input type="radio" name="modalidad" id="m-voluntariado" value="Voluntariado">
-          <label for="m-voluntariado">🤝 Voluntariado</label>
+          <label for="m-voluntariado">
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>
+            Voluntariado
+          </label>
           <input type="radio" name="modalidad" id="m-pasantia" value="Pasantía">
-          <label for="m-pasantia">🎓 Pasantía</label>
+          <label for="m-pasantia">
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><rect x="2" y="7" width="20" height="14" rx="2"/><path d="M16 7V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v2"/></svg>
+            Pasantía
+          </label>
         </div>
       </div>
 
@@ -343,23 +659,23 @@
 
       <div class="field">
         <label for="nombre">Nombre completo <span class="req">*</span></label>
-        <input type="text" id="nombre" name="nombre" placeholder="Ej: Ana María García López" required>
+        <input type="text" id="nombre" name="nombre" placeholder="Ej: Ana María García López" required autocomplete="name">
       </div>
 
       <div class="row">
         <div class="field">
           <label for="edad">Edad <span class="req">*</span></label>
-          <input type="number" id="edad" name="edad" placeholder="Ej: 22" min="16" max="45" required>
+          <input type="number" id="edad" name="edad" placeholder="Ej: 22" min="16" max="45" required inputmode="numeric">
         </div>
         <div class="field">
           <label for="celular">Celular <span class="req">*</span></label>
-          <input type="tel" id="celular" name="celular" placeholder="Ej: 70012345" required>
+          <input type="tel" id="celular" name="celular" placeholder="70012345" required autocomplete="tel" inputmode="tel">
         </div>
       </div>
 
       <div class="field">
         <label for="correo">Correo electrónico <span class="req">*</span></label>
-        <input type="email" id="correo" name="correo" placeholder="nombre@correo.com" required>
+        <input type="email" id="correo" name="correo" placeholder="nombre@correo.com" required autocomplete="email" inputmode="email">
       </div>
 
       <!-- Datos académicos -->
@@ -419,7 +735,7 @@
         </div>
         <div class="field">
           <label for="carrera">Carrera <span class="req">*</span></label>
-          <input type="text" id="carrera" name="carrera" placeholder="Ej: Ingeniería Comercial" required>
+          <input type="text" id="carrera" name="carrera" placeholder="Ej: Ing. Comercial" required>
         </div>
       </div>
 
@@ -427,92 +743,113 @@
       <p class="section-label">Nivel de Inglés</p>
       <div class="field">
         <div class="level-group">
-          <input type="radio" name="ingles" id="a1" value="A1">
-          <label for="a1">A1</label>
-          <input type="radio" name="ingles" id="a2" value="A2">
-          <label for="a2">A2</label>
-          <input type="radio" name="ingles" id="b1" value="B1">
-          <label for="b1">B1</label>
-          <input type="radio" name="ingles" id="b2" value="B2">
-          <label for="b2">B2</label>
-          <input type="radio" name="ingles" id="c1" value="C1">
-          <label for="c1">C1</label>
-          <input type="radio" name="ingles" id="c2" value="C2">
-          <label for="c2">C2</label>
-          <input type="radio" name="ingles" id="sin" value="Sin nivel">
-          <label for="sin">Sin nivel</label>
+          <input type="radio" name="ingles" id="a1" value="A1"><label for="a1">A1</label>
+          <input type="radio" name="ingles" id="a2" value="A2"><label for="a2">A2</label>
+          <input type="radio" name="ingles" id="b1" value="B1"><label for="b1">B1</label>
+          <input type="radio" name="ingles" id="b2" value="B2"><label for="b2">B2</label>
+          <input type="radio" name="ingles" id="c1" value="C1"><label for="c1">C1</label>
+          <input type="radio" name="ingles" id="c2" value="C2"><label for="c2">C2</label>
+          <input type="radio" name="ingles" id="sin" value="Sin nivel"><label for="sin">Sin nivel</label>
         </div>
       </div>
 
       <!-- Submit -->
       <div class="submit-wrap">
-        <button type="submit" id="submitBtn">Enviar registro</button>
+        <button type="submit" id="submitBtn">Enviar postulación</button>
         <div id="msg" class="msg"></div>
       </div>
     </form>
   </div>
 
+  <!-- ── FOOTER ── -->
   <div class="footer">
-    Tus datos están protegidos y serán usados únicamente para el proceso de selección.
+    Tus datos están protegidos y serán usados únicamente<br>
+    para el proceso de selección de AIESEC Bolivia.<br><br>
+    <strong>AIESEC Bolivia</strong> · Cochabamba
   </div>
-</div>
+
+</div><!-- end page-wrap -->
 
 <script>
-  const APPS_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbwU516zWS_8XeGpX6jFoEQ_wtwMszPd8oZqd2DfdhigIvfzSkfWccfEhbimJn-AzSogzg/exec';
+  const APPS_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbyQ5reMFvXjNSstKrAHsy6S-F_pf_5JFGYEwFnTSDMUsYmyXwVsJHgIplSgva1tmrS0VQ/exec';
 
-  const form = document.getElementById('appForm');
-  const submitBtn = document.getElementById('submitBtn');
-  const msg = document.getElementById('msg');
+  const form       = document.getElementById('appForm');
+  const submitBtn  = document.getElementById('submitBtn');
+  const msg        = document.getElementById('msg');
   const univSelect = document.getElementById('universidad');
-  const otraWrap = document.getElementById('otraUnivWrap');
+  const otraWrap   = document.getElementById('otraUnivWrap');
 
+  // ── Cambio de tema completo al seleccionar modalidad ──
+  const themeMap = {
+    'Foro':         'sel-foro',
+    'Voluntariado': 'sel-vol',
+    'Pasantía':     'sel-pas'
+  };
+
+  document.querySelectorAll('input[name="modalidad"]').forEach(input => {
+    input.addEventListener('change', () => {
+      document.body.classList.remove('sel-foro', 'sel-vol', 'sel-pas');
+      document.body.classList.add(themeMap[input.value]);
+    });
+  });
+
+  // ── Otra universidad ──
   univSelect.addEventListener('change', () => {
     otraWrap.style.display = univSelect.value === 'otra' ? 'block' : 'none';
   });
 
+  // ── Mensajes ──
   function showMsg(text, type) {
     msg.textContent = text;
     msg.className = 'msg ' + type;
+    msg.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
   }
 
+  // ── Validación ──
   function validateForm() {
-    const modalidad = form.querySelector('input[name="modalidad"]:checked');
-    if (!modalidad) { showMsg('Por favor selecciona una modalidad.', 'error'); return false; }
-    if (!form.nombre.value.trim()) { showMsg('Por favor ingresa tu nombre completo.', 'error'); return false; }
-    if (!form.edad.value) { showMsg('Por favor ingresa tu edad.', 'error'); return false; }
-    if (!form.celular.value.trim()) { showMsg('Por favor ingresa tu número de celular.', 'error'); return false; }
-    const emailRe = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    if (!emailRe.test(form.correo.value)) { showMsg('Por favor ingresa un correo válido.', 'error'); return false; }
-    if (!form.universidad.value) { showMsg('Por favor selecciona tu universidad.', 'error'); return false; }
-    if (!form.semestre.value) { showMsg('Por favor selecciona tu semestre.', 'error'); return false; }
-    if (!form.carrera.value.trim()) { showMsg('Por favor ingresa tu carrera.', 'error'); return false; }
+    if (!form.querySelector('input[name="modalidad"]:checked'))
+      { showMsg('Por favor selecciona un programa.', 'error'); return false; }
+    if (!form.nombre.value.trim())
+      { showMsg('Por favor ingresa tu nombre completo.', 'error'); return false; }
+    if (!form.edad.value)
+      { showMsg('Por favor ingresa tu edad.', 'error'); return false; }
+    if (!form.celular.value.trim())
+      { showMsg('Por favor ingresa tu número de celular.', 'error'); return false; }
+    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(form.correo.value))
+      { showMsg('Por favor ingresa un correo válido.', 'error'); return false; }
+    if (!form.universidad.value)
+      { showMsg('Por favor selecciona tu universidad.', 'error'); return false; }
+    if (!form.semestre.value)
+      { showMsg('Por favor selecciona tu semestre.', 'error'); return false; }
+    if (!form.carrera.value.trim())
+      { showMsg('Por favor ingresa tu carrera.', 'error'); return false; }
     return true;
   }
 
+  // ── Envío ──
   form.addEventListener('submit', async (e) => {
     e.preventDefault();
     msg.className = 'msg';
-
     if (!validateForm()) return;
 
     submitBtn.disabled = true;
-    submitBtn.innerHTML = '<span class="spinner"></span> Enviando...';
+    submitBtn.innerHTML = '<span class="spinner"></span>Enviando...';
 
     const univVal = form.universidad.value === 'otra'
       ? (form.otraUniversidad.value.trim() || 'Otra')
       : form.universidad.value;
 
     const data = {
-      fecha: new Date().toLocaleString('es-BO', { timeZone: 'America/La_Paz' }),
-      modalidad: form.querySelector('input[name="modalidad"]:checked')?.value || '',
-      nombre: form.nombre.value.trim(),
-      edad: form.edad.value,
-      celular: form.celular.value.trim(),
-      correo: form.correo.value.trim(),
+      fecha:       new Date().toLocaleString('es-BO', { timeZone: 'America/La_Paz' }),
+      modalidad:   form.querySelector('input[name="modalidad"]:checked')?.value || '',
+      nombre:      form.nombre.value.trim(),
+      edad:        form.edad.value,
+      celular:     form.celular.value.trim(),
+      correo:      form.correo.value.trim(),
       universidad: univVal,
-      semestre: form.semestre.value,
-      carrera: form.carrera.value.trim(),
-      ingles: form.querySelector('input[name="ingles"]:checked')?.value || 'No especificado'
+      semestre:    form.semestre.value,
+      carrera:     form.carrera.value.trim(),
+      ingles:      form.querySelector('input[name="ingles"]:checked')?.value || 'No especificado'
     };
 
     try {
@@ -522,14 +859,15 @@
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(data)
       });
-      showMsg('✅ ¡Registro enviado con éxito! Nos pondremos en contacto pronto.', 'success');
+      showMsg('✅ ¡Postulación enviada con éxito! Nos pondremos en contacto contigo pronto.', 'success');
       form.reset();
       otraWrap.style.display = 'none';
+      document.body.classList.remove('sel-foro', 'sel-vol', 'sel-pas');
     } catch (err) {
-      showMsg('❌ Error al enviar. Verifica tu conexión e intenta nuevamente.', 'error');
+      showMsg('❌ Error al enviar. Verifica tu conexión e intenta de nuevo.', 'error');
     } finally {
       submitBtn.disabled = false;
-      submitBtn.innerHTML = 'Enviar registro';
+      submitBtn.innerHTML = 'Enviar postulación';
     }
   });
 </script>
